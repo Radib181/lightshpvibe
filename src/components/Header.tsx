@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Lamp, Menu, X, Settings } from 'lucide-react';
+import { ShoppingCart, Lamp, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
@@ -43,12 +43,6 @@ const Header = () => {
                   {itemCount}
                 </span>
               )}
-            </Button>
-          </Link>
-          <Link to="/admin">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Settings className="h-4 w-4" />
-              Admin
             </Button>
           </Link>
         </div>
@@ -99,13 +93,6 @@ const Header = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               Collections
-            </Link>
-            <Link
-              to="/admin"
-              className="text-lg font-medium hover:text-primary transition-colors py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Admin Panel
             </Link>
           </nav>
         </div>
