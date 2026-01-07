@@ -1,12 +1,33 @@
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Lamp, Menu, X } from 'lucide-react';
+import { ShoppingCart, Lamp, Menu, X, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Header = () => {
   const { itemCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check if admin is logged in
+    const checkAdmin = () => {
+      const adminAuth = localStorage.getItem('adminAuth');
+      setIsAdmin(adminAuth === 'true');
+    };
+
+    checkAdmin();
+    // Listen for storage changes (when admin logs in/out)
+    window.addEventListener('storage', checkAdmin);
+    
+    // Also check periodically for same-tab changes
+    const interval = setInterval(checkAdmin, 1000);
+
+    return () => {
+      window.removeEventListener('storage', checkAdmin);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
@@ -45,6 +66,14 @@ const Header = () => {
               )}
             </Button>
           </Link>
+          {isAdmin && (
+            <Link to="/admin/dashboard">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Settings className="h-4 w-4" />
+                Admin
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -94,6 +123,16 @@ const Header = () => {
             >
               Collections
             </Link>
+            {isAdmin && (
+              <Link
+                to="/admin/dashboard"
+                className="text-lg font-medium hover:text-primary transition-colors py-2 flex items-center gap-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Settings className="h-5 w-5" />
+                Admin Panel
+              </Link>
+            )}
           </nav>
         </div>
       )}
